@@ -1,0 +1,21 @@
+kind: pipeline
+name: amd64
+platform:
+  os: linux
+  arch: amd64
+steps:
+- name: docker
+  image: plugins/docker
+  settings:
+    repo: quay.io/kkohtaka/edgetpu-device-plugin
+    tags: amd64
+    registry: quay.io
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+trigger:
+  branch:
+  - master
+  event:
+  - push
