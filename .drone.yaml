@@ -19,3 +19,29 @@ trigger:
   - master
   event:
   - push
+---
+kind: pipeline
+name: arm64
+platform:
+  os: linux
+  arch: arm64
+steps:
+- name: docker
+  image: plugins/docker
+  settings:
+    repo: quay.io/kkohtaka/edgetpu-device-plugin
+    tags: arm64
+    build_args:
+    - ARCH=arm64
+    - ARCH2=arm64
+    - ARCH3=aarch64
+    registry: quay.io
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+trigger:
+  branch:
+  - master
+  event:
+  - push
