@@ -11,7 +11,7 @@ RUN apt-get update \
         build-essential \
     && mkdir -p /etc/udev/rules.d/ \
     && curl http://storage.googleapis.com/cloud-iot-edge-pretrained-models/edgetpu_api.tar.gz | tar xzv -C / \
-    && mv /tmp/platform_recognizer.${ARCH}.sh /python-tflite-source/platform_recognizer.sh \
+    && mv /tmp/platform_recognizer.${DEBIAN_BASE_SUFFIX}.sh /python-tflite-source/platform_recognizer.sh \
     && cd /python-tflite-source \
     && yes | bash ./install.sh \
     && rm -rf /var/lib/apt/lists/*
