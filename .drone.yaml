@@ -33,20 +33,21 @@ trigger:
   - push
 ---
 kind: pipeline
-name: arm64
+name: arm32
 platform:
   os: linux
-  arch: arm64
+  arch: arm
 steps:
 - name: docker
   image: plugins/docker
   settings:
     repo: quay.io/kkohtaka/edgetpu-device-plugin
-    tags: arm64
+    tags: arm32
     build_args:
-    - ARCH=arm64
-    - ARCH2=arm64
-    - ARCH3=aarch64
+    - DEBIAN_BASE_SUFFIX=arm
+    - GO_ARCH=go1.11.linux-armv6l.tar.gz
+    - SO_SUFFIX=arm32
+    - LIB_PATH=/lib/arm-linux-gnueabihf
     registry: quay.io
     username:
       from_secret: docker_username
@@ -56,11 +57,14 @@ steps:
   image: plugins/docker
   settings:
     repo: quay.io/kkohtaka/edgetpu-device-plugin-sample
-    tags: arm64
+    tags: arm32
     dockerfile: samples/Dockerfile
     context: samples/
     build_args:
-    - ARCH=arm64
+    - DEBIAN_BASE_SUFFIX=arm
+    - GO_ARCH=go1.11.linux-armv6l.tar.gz
+    - SO_SUFFIX=arm32
+    - LIB_PATH=/lib/arm-linux-gnueabihf
     registry: quay.io
     username:
       from_secret: docker_username

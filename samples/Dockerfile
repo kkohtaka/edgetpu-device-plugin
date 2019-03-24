@@ -1,7 +1,7 @@
-ARG ARCH=amd64
-FROM k8s.gcr.io/debian-base-${ARCH}:0.4.1 as builder
-ARG ARCH
-ADD platform_recognizer.${ARCH}.sh /tmp/
+ARG DEBIAN_BASE_SUFFIX=amd64
+FROM k8s.gcr.io/debian-base-${DEBIAN_BASE_SUFFIX}:0.4.1
+ARG DEBIAN_BASE_SUFFIX
+ADD platform_recognizer.${DEBIAN_BASE_SUFFIX}.sh /tmp/
 RUN apt-get update \
     && apt-get install --yes \
         sudo \
