@@ -19,6 +19,7 @@ steps:
   settings:
     repo: quay.io/kkohtaka/edgetpu-device-plugin-sample
     tags: amd64
+    dockerfile: samples/Dockerfile
     context: samples/
     registry: quay.io
     username:
@@ -56,6 +57,7 @@ steps:
   settings:
     repo: quay.io/kkohtaka/edgetpu-device-plugin-sample
     tags: arm64
+    dockerfile: samples/Dockerfile
     context: samples/
     build_args:
     - ARCH=arm64
