@@ -1,4 +1,6 @@
-FROM k8s.gcr.io/debian-base-amd64:0.4.1
+ARG ARCH=amd64
+FROM k8s.gcr.io/debian-base-${ARCH}:0.4.1 as builder
+ARG ARCH
 RUN apt-get update \
     && apt-get install --yes \
         sudo \
