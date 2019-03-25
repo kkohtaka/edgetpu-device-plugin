@@ -2,13 +2,15 @@ package plugin
 
 import (
 	"context"
+	"io/ioutil"
 	"reflect"
+	"strings"
 	"time"
-
-	"github.com/google/gousb"
 
 	"k8s.io/klog"
 	pluginapi "k8s.io/kubernetes/pkg/kubelet/apis/deviceplugin/v1beta1"
+
+	"github.com/kkohtaka/edgetpu-device-plugin/pkg/fileutil"
 )
 
 const (
@@ -17,12 +19,10 @@ const (
 
 	pkgSrcDir     = "/etc/edgetpu/"
 	pkgInstallDir = "/opt/edgetpu/"
-
-	checkFile = ".check"
 )
 
 var (
-	vids = []gousb.ID{0x1a6e, 0x18d1}
+	vids = []string{"1a6e", "18d1"}
 )
 
 type DevicePluginServer struct {
@@ -117,9 +117,6 @@ func (dps *DevicePluginServer) updateCurrentDevices(devices []*pluginapi.Device)
 }
 
 func (dps *DevicePluginServer) startMonitoringDevices() {
-	ctx := gousb.NewContext()
-	defer ctx.Close()
-
 	dps.updateCurrentDevices(nil)
 
 	ticker := time.NewTicker(5 * time.Second)
@@ -128,17 +125,24 @@ func (dps *DevicePluginServer) startMonitoringDevices() {
 
 		func() {
 			var devices []*pluginapi.Device
-			if _, err := ctx.OpenDevices(func(desc *gousb.DeviceDesc) bool {
-				if desc.Vendor == vids[0] || desc.Vendor == vids[1] {
+			files, err := fileutil.FindFiles("/sys/devices", "idVendor")
+			if err != nil {
+				klog.Errorf("Could not find idVendor files in /sys/devices: %v", err)
+			}
+			for _, file := range files {
+				data, err := ioutil.ReadFile(file)
+				if err != nil {
+					klog.Errorf("Could not read file: %v", err)
+					continue
+				}
+				vid := strings.TrimSpace(string(data))
+				if vid == vids[0] || vid == vids[1] {
 					devices = append(devices, &pluginapi.Device{
 						ID:     "42",
 						Health: pluginapi.Healthy,
 					})
-					return false
+					break
 				}
-				return false
-			}); err != nil {
-				klog.Errorf("Could not find a device: %v", err)
 			}
 
 			if !reflect.DeepEqual(dps.devices, devices) {

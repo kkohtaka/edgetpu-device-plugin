@@ -37,14 +37,6 @@
   version = "v1.3.0"
 
 [[projects]]
-  branch = "master"
-  digest = "1:2ef895ea08a0af10ad6f1e1faf631c82fa5413dcf0ada93eb62ab5ad02df4979"
-  name = "github.com/google/gousb"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "d0c05ab7f70d6f6dc60ecd184517cb5e25860657"
-
-[[projects]]
   branch = "release-branch.go1.10"
   digest = "1:677a5d026fcc0c1e764f2d688a363316e3b157cec39b8fbaa0c1a1796aac3643"
   name = "golang.org/x/net"
@@ -165,7 +157,6 @@
   analyzer-version = 1
   input-imports = [
     "github.com/fsnotify/fsnotify",
-    "github.com/google/gousb",
     "golang.org/x/xerrors",
     "google.golang.org/grpc",
     "k8s.io/klog",
