@@ -30,21 +30,17 @@ spec:
       containers:
       - name: edgetpu-device-plugin
         image: quay.io/kkohtaka/edgetpu-device-plugin:arm32
+        imagePullPolicy: Always
         command:
           - /bin/edgetpu-device-plugin
           - -v=99
         securityContext:
           privileged: true
-          # allowPrivilegeEscalation: false
-          # capabilities:
-          #   drop: ["ALL"]
         volumeMounts:
         - name: devfs
           mountPath: /dev
         - name: sysfs
           mountPath: /sys
-        - name: optfs
-          mountPath: /opt/edgetpu
         - name: device-plugin
           mountPath: /var/lib/kubelet/device-plugins
       volumes:
@@ -54,9 +50,6 @@ spec:
       - name: sysfs
         hostPath:
           path: /sys
-      - name: optfs
-        hostPath:
-          path: /opt/edgetpu
       - name: device-plugin
         hostPath:
           path: /var/lib/kubelet/device-plugins

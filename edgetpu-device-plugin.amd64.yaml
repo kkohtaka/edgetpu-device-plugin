@@ -30,6 +30,7 @@ spec:
       containers:
       - name: edgetpu-device-plugin
         image: quay.io/kkohtaka/edgetpu-device-plugin:amd64
+        imagePullPolicy: Always
         command:
           - /bin/edgetpu-device-plugin
           - -v=99

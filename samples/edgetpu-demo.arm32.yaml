@@ -15,6 +15,7 @@ spec:
       containers:
       - name: edgetpu-demo
         image: quay.io/kkohtaka/edgetpu-demo:arm32
+        imagePullPolicy: Always
         command:
           - python3.5
           - demo/classify_image.py
