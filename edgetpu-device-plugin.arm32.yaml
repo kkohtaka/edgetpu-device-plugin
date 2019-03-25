@@ -29,8 +29,7 @@ spec:
         effect: NoSchedule
       containers:
       - name: edgetpu-device-plugin
-        image: edgetpu-device-plugin
-        imagePullPolicy: IfNotPresent
+        image: quay.io/kkohtaka/edgetpu-device-plugin:arm32
         command:
           - /bin/edgetpu-device-plugin
           - -v=99

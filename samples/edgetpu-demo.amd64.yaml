@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: edgetpu-demo
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: edgetpu-demo
+  namespace: edgetpu-demo
+spec:
+  backoffLimit: 4
+  template:
+    spec:
+      containers:
+      - name: edgetpu-demo
+        image: quay.io/kkohtaka/edgetpu-demo:amd64
+        command:
+          - python3.5
+          - demo/classify_image.py
+          - --model=test_data/mobilenet_v2_1.0_224_inat_bird_quant_edgetpu.tflite
+          - --label=test_data/inat_bird_labels.txt
+          - --image=test_data/parrot.jpg
+        resources:
+          limits:
+            kkohtaka.org/edgetpu: 1
+      restartPolicy: Never
