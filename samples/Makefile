@@ -2,7 +2,13 @@ default: build
 
 .PHONY: build
 build:
-	docker build -t edgetpu-demo:latest .
+	docker build -t quay.io/kkohtaka/edgetpu-demo:amd64 .
+
+.PHONY: build-arm32
+build-arm32:
+	docker build -t quay.io/kkohtaka/edgetpu-demo:arm32 \
+		--build-arg DEBIAN_BASE_SUFFIX=arm \
+		.
 
 .PHONY: run
 run:

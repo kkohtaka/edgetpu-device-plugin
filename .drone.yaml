@@ -17,7 +17,7 @@ steps:
 - name: docker-sample
   image: plugins/docker
   settings:
-    repo: quay.io/kkohtaka/edgetpu-device-plugin-sample
+    repo: quay.io/kkohtaka/edgetpu-demo
     tags: amd64
     dockerfile: samples/Dockerfile
     context: samples/
@@ -45,7 +45,7 @@ steps:
     tags: arm32
     build_args:
     - DEBIAN_BASE_SUFFIX=arm
-    - GO_ARCH=go1.11.linux-armv6l.tar.gz
+    - GO_TARBALL=go1.11.linux-armv6l.tar.gz
     - SO_SUFFIX=arm32
     - LIB_PATH=/lib/arm-linux-gnueabihf
     registry: quay.io
@@ -56,15 +56,12 @@ steps:
 - name: docker-sample
   image: plugins/docker
   settings:
-    repo: quay.io/kkohtaka/edgetpu-device-plugin-sample
+    repo: quay.io/kkohtaka/edgetpu-demo
     tags: arm32
     dockerfile: samples/Dockerfile
     context: samples/
     build_args:
     - DEBIAN_BASE_SUFFIX=arm
-    - GO_TARBALL=go1.11.linux-armv6l.tar.gz
-    - SO_SUFFIX=arm32
-    - LIB_PATH=/lib/arm-linux-gnueabihf
     registry: quay.io
     username:
       from_secret: docker_username
