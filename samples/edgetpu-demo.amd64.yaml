@@ -12,6 +12,11 @@ spec:
   backoffLimit: 4
   template:
     spec:
+      serviceAccountName: specialsa
+      securityContext:
+        runAsUser: 89939
+        runAsGroup: 89939
+        fsGroup: 89939
       containers:
       - name: edgetpu-demo
         image: quay.io/kkohtaka/edgetpu-demo:amd64

@@ -11,7 +11,7 @@ import (
 	"k8s.io/klog"
 	pluginapi "k8s.io/kubernetes/pkg/kubelet/apis/deviceplugin/v1beta1"
 
-	"github.com/kkohtaka/edgetpu-device-plugin/pkg/plugin"
+	"github.com/revoman/edgetpu-device-plugin/pkg/plugin"
 )
 
 func main() {

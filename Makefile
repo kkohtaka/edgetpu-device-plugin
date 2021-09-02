@@ -1,5 +1,5 @@
 REGISTRY=quay.io
-PRODUCT=kkohtaka/edgetpu-device-plugin
+PRODUCT=revoman/edgetpu-device-plugin
 
 default: build
 

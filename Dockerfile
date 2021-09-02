@@ -4,11 +4,12 @@ ARG GO_TARBALL=go1.11.linux-amd64.tar.gz
 ENV GOROOT=/usr/local/go
 ENV GOPATH=/go
 ENV PATH=$GOPATH/bin:$GOROOT/bin:$PATH
+
 RUN apt-get update && apt-get install -y \
         curl \
     && rm -rf /var/lib/apt/lists/*
 RUN curl https://dl.google.com/go/${GO_TARBALL} | tar zxv -C /usr/local
-WORKDIR $GOPATH/src/github.com/kkohtaka/edgetpu-device-plugin
+WORKDIR $GOPATH/src/github.com/revoman/edgetpu-device-plugin
 COPY main.go .
 COPY pkg pkg
 COPY vendor vendor
@@ -26,4 +27,9 @@ RUN apt-get update && apt-get install -y \
         udev \
     && rm -rf /var/lib/apt/lists/* \
     && udevadm trigger
+
+RUN chgrp -R 0 /python-tflite-source \
+    && chmod -R g=u /python-tflite-source
 ENTRYPOINT ["/bin/edgetpu-device-plugin"]
+USER 1001
+
