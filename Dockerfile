@@ -23,6 +23,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -o /bin/edgetpu-device-plugin
 FROM debian:bullseye-slim
 ARG SO_SUFFIX=x86_64
 ARG LIB_PATH=/lib/x86_64-linux-gnu
+COPY --from=builder /bin/edgetpu-device-plugin /bin/
 RUN apt update && apt install -y \
         curl \
         libusb-dev \
