@@ -1,29 +1,45 @@
 ARG DEBIAN_BASE_SUFFIX=amd64
-FROM k8s.gcr.io/debian-base-${DEBIAN_BASE_SUFFIX}:0.4.1 as builder
-ARG GO_TARBALL=go1.11.linux-amd64.tar.gz
+FROM debian:bullseye-slim as builder
+ARG GO_TARBALL=go1.17.linux-amd64.tar.gz
 ENV GOROOT=/usr/local/go
 ENV GOPATH=/go
 ENV PATH=$GOPATH/bin:$GOROOT/bin:$PATH
 RUN apt-get update && apt-get install -y \
         curl \
+        git \
     && rm -rf /var/lib/apt/lists/*
 RUN curl https://dl.google.com/go/${GO_TARBALL} | tar zxv -C /usr/local
-WORKDIR $GOPATH/src/github.com/kkohtaka/edgetpu-device-plugin
+WORKDIR $GOPATH/src/github.com/therevoman/edgetpu-device-plugin
+COPY vendor vendor
 COPY main.go .
 COPY pkg pkg
-COPY vendor vendor
+COPY go.sum .
+COPY go.mod .
+#RUN go mod vendor \
+#    && go get -u golang.org/x/xerrors \
+#    && go get -u k8s.io/client-go@v0.18.19
 RUN CGO_ENABLED=0 GOOS=linux go build -a -o /bin/edgetpu-device-plugin
-RUN curl http://storage.googleapis.com/cloud-iot-edge-pretrained-models/edgetpu_api.tar.gz | tar xzv -C /
 
-FROM k8s.gcr.io/debian-base-${DEBIAN_BASE_SUFFIX}:0.4.1
+FROM debian:bullseye-slim
 ARG SO_SUFFIX=x86_64
 ARG LIB_PATH=/lib/x86_64-linux-gnu
-COPY --from=builder /python-tflite-source/libedgetpu/libedgetpu_${SO_SUFFIX}.so ${LIB_PATH}/libedgetpu.so
-COPY --from=builder /python-tflite-source/99-edgetpu-accelerator.rules /etc/udev/rules.d/
 COPY --from=builder /bin/edgetpu-device-plugin /bin/
-RUN apt-get update && apt-get install -y \
-        libusb-1.0 \
+RUN apt update && apt install -y \
+        curl \
+        libusb-dev \
         udev \
+        gnupg \
     && rm -rf /var/lib/apt/lists/* \
-    && udevadm trigger
+    && echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" | tee /etc/apt/sources.list.d/coral-edgetpu.list \
+    && echo "deb https://packages.cloud.google.com/apt coral-cloud-stable main" | tee /etc/apt/sources.list.d/coral-cloud.list \
+    && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - \
+    && apt update && apt upgrade -y\
+    && apt install -y \
+        python3-pycoral \
+        libedgetpu1-std \
+        gasket-dkms \
+        edgetpu-compiler \
+    && rm -rf /var/lib/apt/lists/* \
+    && (udevadm trigger || true)
+
 ENTRYPOINT ["/bin/edgetpu-device-plugin"]
