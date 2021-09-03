@@ -1,5 +1,5 @@
 REGISTRY=quay.io
-PRODUCT=kkohtaka/edgetpu-demo
+PRODUCT=revoman/edgetpu-demo
 
 default: build
 
@@ -15,11 +15,13 @@ build-arm32:
 
 .PHONY: run
 run:
-	kubectl apply -f edgetpu-demo.yaml
+	kubectl delete job edgetpu-demo --ignore-not-found
+	kubectl delete pod -l job-name=edgetpu-demo --ignore-not-found
+	kubectl apply -f edgetpu-demo.amd64.yaml
 
 .PHONY: clean
 clean:
-	kubectl delete --ignore-not-found -f edgetpu-demo.yaml
+	kubectl delete --ignore-not-found -f edgetpu-demo.amd64.yaml
 
 .PHONY: push
 push:

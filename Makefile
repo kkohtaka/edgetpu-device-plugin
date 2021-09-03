@@ -29,7 +29,7 @@ samples-arm32:
 .PHONY: clean
 clean:
 	$(MAKE) -C samples clean
-	kubectl delete --ignore-not-found -f edgetpu-device-plugin.yaml
+	kubectl delete --ignore-not-found -f edgetpu-device-plugin.amd64.yaml
 
 .PHONY: push
 push:

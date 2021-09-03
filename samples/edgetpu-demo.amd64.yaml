@@ -3,6 +3,25 @@ kind: Namespace
 metadata:
   name: edgetpu-demo
 ---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: edgetpu
+  namespace: edgetpu-demo
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: 'system:openshift:scc:anyuid'
+subjects:
+  - kind: ServiceAccount
+    name: edgetpu
+    namespace: edgetpu-demo
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: 'system:openshift:scc:anyuid'
+---
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -12,21 +31,24 @@ spec:
   backoffLimit: 4
   template:
     spec:
-      serviceAccountName: specialsa
+      serviceAccountName: edgetpu
       securityContext:
-        runAsUser: 89939
-        runAsGroup: 89939
-        fsGroup: 89939
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
       containers:
       - name: edgetpu-demo
-        image: quay.io/kkohtaka/edgetpu-demo:amd64
+        image: quay.io/revoman/edgetpu-demo:amd64
         imagePullPolicy: Always
         command:
-          - python3.5
-          - demo/classify_image.py
-          - --model=test_data/mobilenet_v2_1.0_224_inat_bird_quant_edgetpu.tflite
-          - --label=test_data/inat_bird_labels.txt
-          - --image=test_data/parrot.jpg
+          - python3
+          - examples/classify_image.py
+          - -i
+          - test_data/parrot.jpg
+          - -m
+          - test_data/mobilenet_v2_1.0_224_inat_bird_quant_edgetpu.tflite
+          - -l
+          - test_data/inat_bird_labels.txt
         resources:
           limits:
             kkohtaka.org/edgetpu: 1

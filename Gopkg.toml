@@ -7,8 +7,12 @@
   version = "0.2.0"
 
 [[constraint]]
+  name = "k8s.io/client-go"
+  version = "v0.18.19"
+
+[[constraint]]
   name = "k8s.io/kubernetes"
-  version = "1.13.4"
+  version = "v1.18.19"
 
 [prune]
   go-tests = true
