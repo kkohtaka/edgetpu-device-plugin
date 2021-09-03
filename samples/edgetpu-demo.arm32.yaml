@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: edgetpu-demo
-        image: quay.io/kkohtaka/edgetpu-demo:arm32
+        image: quay.io/revoman/edgetpu-demo:arm32
         imagePullPolicy: Always
         command:
           - python3.5

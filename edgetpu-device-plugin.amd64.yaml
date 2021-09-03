@@ -24,12 +24,12 @@ spec:
       # This, along with the annotation above marks this pod as a critical add-on.
       - key: CriticalAddonsOnly
         operator: Exists
-      - key: kkohtaka.org/edgetpu
+      - key: revoman.org/edgetpu
         operator: Exists
         effect: NoSchedule
       containers:
       - name: edgetpu-device-plugin
-        image: quay.io/kkohtaka/edgetpu-device-plugin:amd64
+        image: quay.io/revoman/edgetpu-device-plugin:amd64
         imagePullPolicy: Always
         command:
           - /bin/edgetpu-device-plugin

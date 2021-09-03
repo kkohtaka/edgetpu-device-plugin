@@ -7,7 +7,7 @@ steps:
 - name: docker
   image: plugins/docker
   settings:
-    repo: quay.io/kkohtaka/edgetpu-device-plugin
+    repo: quay.io/revoman/edgetpu-device-plugin
     tags: amd64
     registry: quay.io
     username:
@@ -41,7 +41,7 @@ steps:
 - name: docker
   image: plugins/docker
   settings:
-    repo: quay.io/kkohtaka/edgetpu-device-plugin
+    repo: quay.io/revoman/edgetpu-device-plugin
     tags: arm32
     build_args:
     - DEBIAN_BASE_SUFFIX=arm
